@@ -1,0 +1,29 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: banking-portal-api
+spec:
+  replicas: 1
+  selector:
+    app: banking-portal-api
+  template:
+    metadata:
+      labels:
+        app: banking-portal-api
+    spec:
+      containers:
+        - name: banking-portal-api
+          image: 'image-registry.openshift-image-registry.svc:5000/ravikumardrm-dev/banking-portal-api:latest'
+          ports:
+            - containerPort: 8080
+          
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - banking-portal-api
+        from:
+          kind: ImageStreamTag
+          name: 'banking-portal-api:latest'
